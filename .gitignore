@@ -1,0 +1,69 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.env/
+venv.bak/
+env.bak/
+
+# Pytest
+.cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Python development tools
+*.coverage
+.coverage.*
+nosetests.xml
+pytest.xml
+test_*.db
+*.log
+
+# Flask
+instance/
+.webassets-cache
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+
+# Environments
+*.env
+*.env.*

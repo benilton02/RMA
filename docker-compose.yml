@@ -1,0 +1,36 @@
+version: '3.3'
+services:
+  postgresql:
+    container_name: postgresql_db
+    image: postgres:latest
+    restart: always
+    networks:
+      postgres-net:
+        aliases:
+          - db
+    ports:
+      - 5432:5432
+    
+    # environment:
+    #   - POSTGRES_DB=postgres
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    
+    env_file:
+      - .env
+      
+    volumes:
+      - postgres-data:/data/postgres
+
+
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - 6379:6379
+
+  
+networks:
+  postgres-net:
+
+volumes:
+  postgres-data:
