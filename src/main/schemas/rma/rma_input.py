@@ -13,7 +13,7 @@ class RMAInput(BaseModel):
     class Config:
         schema_extra = {
             'example': {
-                'name': 'Smartphone Screen',
+                'name': 'Smartphone',
                 'description': 'Screen damaged due to impact',
                 'defect': 'HARDWARE',
                 'model': 'model package',
