@@ -40,6 +40,7 @@ def test_create_rma_success(rma_use_case, mock_user_repository, mock_rma_reposit
     rma_mock.defect = 'Crack'
     rma_mock.model = 'XYZ123'
     rma_mock.color = 'Black'
+    rma_mock.serial_number = 'serial_number'
 
     data = {
         'logged_user': {'email': 'testuser@example.com'},
@@ -84,12 +85,13 @@ def test_update_rma_success(rma_use_case, mock_user_repository, mock_rma_reposit
     assert result['code'] == 200
     assert result['data']['message'] == 'The RMA was updated successfully'
     
+    
     mock_user_repository.find_user_by_email.assert_called_once_with('testuser@example.com')
     mock_rma_repository.get_rma_by_id.assert_called_once_with(1234)
     mock_rma_repository.update_rma.assert_called_once_with(rma_mock)
     
     assert len(rma_mock.status) == 1
-    assert rma_mock.status[0].value == 'Updated'
+    assert rma_mock.status[0].status == 'Updated'
     assert rma_mock.status[0].user_id == user_mock.id
     
 
