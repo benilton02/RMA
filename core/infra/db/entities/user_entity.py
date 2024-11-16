@@ -59,7 +59,7 @@ class Users(Base):
         backref='userin',
     )
     
-    status = relationship('Status', back_populates='user')
+    status = relationship('UserStatusAssociation', back_populates='user')
 
 
     def __repr__(self) -> str:

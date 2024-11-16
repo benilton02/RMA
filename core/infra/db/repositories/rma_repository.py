@@ -1,6 +1,6 @@
 
 from core.infra.db.config import DBConnectionHandler
-from core.infra.db.entities.rma_entity import RMA, Status, rma_status_association
+from core.infra.db.entities.rma_entity import RMA, UserStatusAssociation, rma_status_association
 from sqlalchemy.orm import joinedload, aliased
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy import func, and_, func, case, cast, Float
@@ -40,7 +40,7 @@ class RMARespository:
                 data = (
                     db_connection.session.query(RMA)
                     .options(
-                    joinedload(RMA.status).joinedload(Status.user).load_only("email", "full_name")
+                    joinedload(RMA.status).joinedload(UserStatusAssociation.user).load_only("email", "full_name")
                 )
                     .filter_by(id=rma_id)
                     .one()
@@ -70,12 +70,12 @@ class RMARespository:
 
     def step_average(self):
         with DBConnectionHandler() as db_connection:
-            current_status = aliased(Status)
-            next_status = aliased(Status)
+            current_status = aliased(UserStatusAssociation)
+            next_status = aliased(UserStatusAssociation)
 
             query = (
                 db_connection.session.query(
-                    current_status.value.label('step'),
+                    current_status.status.label('step'),
                     func.avg(
                         cast(
                             (func.extract('epoch', next_status.created_at) - func.extract('epoch', current_status.created_at)),
@@ -84,15 +84,15 @@ class RMARespository:
                     ).label('average_duration_seconds')
                 )
                 .join(
-                    rma_status_association, rma_status_association.c.status_id == current_status.id
+                    rma_status_association, rma_status_association.c.user_status_association_id == current_status.id
                 )
                 .join(
                     next_status,
                     (rma_status_association.c.rma_id == rma_status_association.c.rma_id) & 
                     (next_status.created_at > current_status.created_at)
                 )
-                .group_by(current_status.value)
-                .order_by(current_status.value)
+                .group_by(current_status.status)
+                .order_by(current_status.status)
             )
 
             return query.all()

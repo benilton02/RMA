@@ -1,5 +1,5 @@
 from core.infra.db.repositories.rma_repository import RMARespository
-from core.infra.db.entities.rma_entity import RMA, Status
+from core.infra.db.entities.rma_entity import RMA, UserStatusAssociation
 from core.infra.db.repositories.user_repository import UserRepository
 from core.utils.permissions import admin_required
 
@@ -21,8 +21,8 @@ class RMAUseCases:
             return {'success': False, 'code': 400, 'detail': f'The {email} is not registered'}
 
         rma = data['rma'].__dict__
-        current_status = Status(
-            value=data['status'],
+        current_status = UserStatusAssociation(
+            status=data['status'],
             user_id=user.id
         )
         
@@ -63,8 +63,8 @@ class RMAUseCases:
             return {'success': False, 'code': 400, 'detail': f'The RMA {rma_id} is not registered'}
         
         value = data['value']
-        current_status = Status(value=value, user_id=user.id)
-        
+        current_status = UserStatusAssociation(status=value, user_id=user.id)
+    
         rma.status.append(current_status)
         result = self.rma_repository.update_rma(rma)
         
