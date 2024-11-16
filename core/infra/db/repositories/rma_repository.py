@@ -40,7 +40,8 @@ class RMARespository:
                 data = (
                     db_connection.session.query(RMA)
                     .options(
-                    joinedload(RMA.status).joinedload(UserStatusAssociation.user).load_only("email", "full_name")
+                    joinedload(RMA.status).joinedload(UserStatusAssociation.user).load_only("email", "full_name"),
+                    joinedload(RMA.product)
                 )
                     .filter_by(id=rma_id)
                     .one()

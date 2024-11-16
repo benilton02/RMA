@@ -12,16 +12,25 @@ rma_status_association = Table(
 )
 
 
+class Product(Base):
+    __tablename__ = 'products'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)  # Nome do produto
+    model = Column(String(255), nullable=False)  # Modelo do produto
+    color = Column(String(255), nullable=False)  # Cor do produto
+    serial_number = Column(String(255), nullable=False, unique=True) # identificado do produto
+    rmas = relationship('RMA', back_populates='product', cascade="all, delete-orphan")
+
 class RMA(Base):
     __tablename__ = 'rmas'
     
     id = Column(Integer, primary_key=True)
-    product_name = Column(String(255), nullable=False) # Nome do produto
+    product_id = Column(Integer, ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
     defect_description = Column(Text, nullable=False) # Descrição do defeito
     defect = Column(String(255), nullable=False)  # Defeito
-    model = Column(String(255), nullable=False) # Modelo do produto
-    color = Column(String(255), nullable=False) # Cor do produto
     created_at = Column(DateTime(timezone=True), default=datetime.now(timezone.utc))
+    product = relationship('Product', back_populates='rmas')
     status = relationship(
         'UserStatusAssociation', 
         secondary=rma_status_association, 

@@ -1,5 +1,5 @@
 from core.infra.db.repositories.rma_repository import RMARespository
-from core.infra.db.entities.rma_entity import RMA, UserStatusAssociation
+from core.infra.db.entities.rma_entity import RMA, Product, UserStatusAssociation
 from core.infra.db.repositories.user_repository import UserRepository
 from core.utils.permissions import admin_required
 
@@ -26,13 +26,19 @@ class RMAUseCases:
             user_id=user.id
         )
         
+        product = Product(
+            name = rma['name'],
+            model = rma['model'],
+            color = rma['color'],
+            serial_number = rma['serial_number']
+        )
+        
         rma_entity = RMA(
-            product_name=rma['name'],
             defect_description=rma['description'],
             defect=rma['defect'],
-            model = rma['model'],
-            color = rma['color']
+            product=product
         )
+        
         rma_entity.status.append(current_status)
         result = self.rma_repository.create_rma(rma_entity)
 
